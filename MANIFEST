@@ -9,6 +9,7 @@ minil.toml
 script/kv2json
 t/00_compile.t
 t/01_basic.t
+t/02_run.t
 xt/packed.t
 META.yml
 MANIFEST

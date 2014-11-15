@@ -3,7 +3,7 @@ use 5.008001;
 use strict;
 use warnings;
 
-our $VERSION = "0.01";
+our $VERSION = "0.02";
 
 use Encode;
 use JSON::PP;
@@ -20,7 +20,7 @@ sub run {
     my $hash = kv2hash(@key_values);
 
     my $coder = JSON::PP->new->ascii(1);
-    print $coder->encode($hash) . "\n";
+    $coder->encode($hash) . "\n";
 }
 
 sub kv2hash {
@@ -44,7 +44,16 @@ sub kv2hash {
         my $target = $hash;
         while (@keys) {
             my $key = shift @keys;
+            my $is_number = $key =~ s/#$//;
             if (!@keys) {
+                if ($is_number) {
+                    if (ref $value) {
+                        $value = [map { $_ += 0 } @$value]
+                    }
+                    else {
+                        $value += 0;
+                    }
+                }
                 $target->{$key} = $value;
                 last;
             }
